@@ -1,0 +1,20 @@
+   @apollo/client
+ 
+    axios
+    draft-js
+    draftjs-to-html
+    graphql
+    graphql-tag
+    html-to-draftjs
+    
+    react-alert-template-basic
+  
+    react-draft-wysiwyg
+    react-helmet-async
+    react-images-uploading
+    react-loader-spinner
+    react-multiple-image-input
+    react-router-dom
+   
+    react-spinners
+    urql

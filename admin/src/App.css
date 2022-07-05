@@ -1,0 +1,14 @@
+.rdw-editor-main {
+  min-height: 300px !important;
+  border: 1px solid #ccc !important;
+  margin-bottom: 19px !important;
+}
+
+.lmMaya {
+  border: 1px solid #ccc !important;
+}
+
+.rdw-colorpicker-modal {
+  left: unset !important;
+  right: 0px !important;
+}
