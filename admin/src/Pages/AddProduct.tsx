@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
+import { EditorState, convertToRaw } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
-import ImageUploading from "react-images-uploading";
+
 import MultiImageInput from "react-multiple-image-input";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useAlert } from "react-alert";
 
-import htmlToDraft from "html-to-draftjs";
+
 import axios from "axios";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { useIsAuth } from "../utils/useIsAuth";
+import { useCreatePostMutation } from "../generated/graphql";
+import { Console, log } from "console";
 export default function AddProduct() {
   useIsAuth();
   const alert = useAlert();
@@ -38,6 +40,7 @@ export default function AddProduct() {
     aspect: 4 / 3,
     width: "100",
   };
+  const [createPost] = useCreatePostMutation();
   const [title, settitle] = useState<string>("");
   const [images, setImages] = useState({});
   const [imgLoading, setimgLoading] = useState(false);
@@ -76,8 +79,38 @@ export default function AddProduct() {
     alert.success("All images are uploaded");
   };
 
+  // async (values) => {
+  //   const { errors } = await createPost({
+  //     variables: { input: values },
+  //     update: (cache) => {
+  //       cache.evict({ fieldName: "posts:{}" });
+  //     },
+  //   });
+  //   if (!errors) {
+  //     router.push("/");
+  //   }
+  // }
+  const [text, setText] = useState("");
   const addProduct = async (e: any) => {
     e.preventDefault();
+    const values = {
+      title,
+      images:productImage,
+      description: content,
+      text,
+    };
+    console.log(values)
+    const { errors } = await createPost({
+      variables: { input: values },
+      update: (cache) => {
+        cache.evict({ fieldName: "posts:{}" });
+      },
+    });
+    console.log(errors);
+    
+    if (!errors) {
+      // router.push("/");
+    }
   };
   return (
     <>
@@ -114,7 +147,10 @@ export default function AddProduct() {
                       <input
                         autoComplete="none"
                         onChange={(e) => {
+                         
+                          
                           settitle(e.target.value);
+                          console.log(title);
                         }}
                         type="text"
                         className="form-control"
@@ -134,7 +170,6 @@ export default function AddProduct() {
                           );
                         }}
                         toolbar={{
-                          
                           inline: { inDropdown: false },
                           list: { inDropdown: false },
                           textAlign: { inDropdown: false },
@@ -150,7 +185,22 @@ export default function AddProduct() {
                         }}
                       />
                     </div>
-
+                    <div className="form-group">
+                      <label htmlFor="productTitle">Page Title</label>
+                      <input
+                        autoComplete="none"
+                       
+                        onChange={(e) => {
+                         
+                          
+                          setText( e.target.value);
+                          console.log(title);
+                        }}
+                        type="text"
+                        className="form-control"
+                        id="productTitle"
+                      />
+                    </div>
                     <MultiImageInput
                       images={images}
                       setImages={setImages}
